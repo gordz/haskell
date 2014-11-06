@@ -15,7 +15,7 @@ int2letUpper n = chr (ord 'A' + n)
 shift :: Int -> Char -> Char
 shift n c
 	| isLower c = int2let ((let2int c + n) `mod` 26)
-	| isUpper = int2letUpper ((let2intUpper c + n) `mod` 26)
+	| isUpper c = int2letUpper ((let2intUpper c + n) `mod` 26)
 	| otherwise = c
 
 -- Encode
