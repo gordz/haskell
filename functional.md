@@ -607,3 +607,7 @@ reverse (x:xs) = reverse xs ++ [x]
 
 - Recursion is often a natural way to define functions.
 
+
+e.g
+scalarproduct :: [ Int ] -> [ Int ] -> Int
+scalarproduct xs ys = sum [ x * y | (x, y) <- zip xs ys]
