@@ -611,3 +611,74 @@ reverse (x:xs) = reverse xs ++ [x]
 e.g
 scalarproduct :: [ Int ] -> [ Int ] -> Int
 scalarproduct xs ys = sum [ x * y | (x, y) <- zip xs ys]
+
+# Higer Order Functions
+Higher-order functions are the ultimate solution to DRY.
+
+A higher order function is a function that takes a function as an argument, or returns a function as a result
+
+e.g Twice takes a function as an argument and applies it twice to x.
+twice :: (a -> a) -> a -> a
+twice f x = f (f x)
+
+- Higher order functions as useful for DRY - repition can be extracted into a higher order function -> common programming idioms can be encoded as functions.
+
+- Higher order functions allow you to create rich API / DSLs
+
+
+## Map
+A higher order library function that applies a function to every element of a list.
+
+e.g 
+map (+1) [1,3,5,7]
+
+e.g map defined as a list comprehensions
+map f xs = [f x | x <- xs]
+
+e.g recursive
+map f [] = []
+map f (x:xs) = f x : map f xs
+
+## Filter
+Selects every element from a list that satisfies a predicate.
+e.g filter even [1..10]
+
+FIlter can be defined in 2 ways
+e.g filter p xs = [x | x <- xs, p x]
+e.g 
+filter p [] = []
+filter p (x:xs)
+	| p x = x : filter p xs
+	| otherwise = filter p xs
+
+## Foldr (Reduce function)
+- captures recursively descending over the structure of a list
+- captures the essence of recursing over a list -> encapsulates the pattern of recusrion over a list
+
+e.g 
+sum = foldr (+) 0
+product = foldr (*) 1
+or = foldr (||) False
+and = foldr (&&) True
+
+Foldr is defined as:
+
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr f v [] = v
+foldr f v (x:xs) = f x (foldr f v xs)
+
+
+e.g sum [1,2,3] = foldr (+) 0 [1,2,3]
+		= foldr (+) 0 (1:(2:(3:[])))
+
+
+## Function Composition ( . operator )
+It returns the composition of 2 functions as a single function
+(.) :: (b -> c) -> (a -> b) -> a -> c
+f . g = \x -> f (g x)
+
+
+TODO cons operator associativity?
+
+
+

@@ -10,6 +10,7 @@ module Lab2 where
 
 toDigits :: Integer -> [Integer]
 toDigits n
+	| n < 0 = error "Number must be >= 0."
 	| n < 10 = [n]
 	| otherwise = toDigits (n `div` 10) ++ [n `mod` 10] 
 
