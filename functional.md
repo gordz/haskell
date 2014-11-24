@@ -76,7 +76,7 @@ sqrt
 odd 
 even
 mod
-
+n ^ x : n to power of x
 
 # Strings
 Strings are in double quotes "
@@ -162,7 +162,7 @@ product [1..n]
 reverse [1, 2, 3]     // Reverse a list
 init [1, 2, 3, 4]  	// removes last element, returning [1, 2, 3]
 last [1, 2, 3, 4] 	// removes last element from non empty list, = [1, 2, 3]
-[1, 2] !! 1  		// take the first element
+[1, 2] !! 1  		// take the nth element (0 based)
 x `elem` [1, 2, 3]	// is x an element of the list?
 replicate n x		// build a list by repeating an element n times
 replicate 3 True = [True, True, True]
@@ -368,6 +368,9 @@ head (x:_) = x
 
 tail :: [a] -> a
 tail (_:xs) = xs
+
+
+(_:xs) : Pattern that discards the head element.
 
 # Lambda Expressions
 - allow anonymous functions (nameless function). An expression that denotes a function.
@@ -633,18 +636,26 @@ e.g
 map (+1) [1,3,5,7]
 
 e.g map defined as a list comprehensions
+map :: (a -> b) -> [a] -> [b]
 map f xs = [f x | x <- xs]
 
 e.g recursive
+map :: (a -> b) -> [a] -> [b]
 map f [] = []
 map f (x:xs) = f x : map f xs
 
+e.g
+[f x | x <- xs, p x]  =  map f (filter p xs)
+
+
 ## Filter
-Selects every element from a list that satisfies a predicate.
+Selects every element from a list that satisfies a predicate. Removes items from a list based on a predicate.
 e.g filter even [1..10]
 
 FIlter can be defined in 2 ways
-e.g filter p xs = [x | x <- xs, p x]
+e.g 
+filter p xs = [x | x <- xs, p x]
+
 e.g 
 filter p [] = []
 filter p (x:xs)
@@ -654,31 +665,132 @@ filter p (x:xs)
 ## Foldr (Reduce function)
 - captures recursively descending over the structure of a list
 - captures the essence of recursing over a list -> encapsulates the pattern of recusrion over a list
+- foldr - fold from the right
 
-e.g 
+e.g All the below functions are instance of foldr with a particular 'v' and 'funny plus'
 sum = foldr (+) 0
 product = foldr (*) 1
 or = foldr (||) False
 and = foldr (&&) True
 
-Foldr is defined as:
+Foldr can be defined with recursion as as:
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr f v [] = v
 foldr f v (x:xs) = f x (foldr f v xs)
 
+foldr maps the empty list to some value v, and any non empty list to some function applied to its head
+and foldr of its tail.
 
 e.g sum [1,2,3] = foldr (+) 0 [1,2,3]
 		= foldr (+) 0 (1:(2:(3:[])))
 
+foldr essentially replaces cons with the function, and [] with v
+
+foldr is a homomorphism over lists -> similar to the visitor pattern.
+
+foldr abstracts the pattern of recursing over a list
+
+e.g
+length :: [a] -> Int
+length [] = 0
+length (_:xs) = 1 + length xs
+
+As foldr this would be:
+
+length = foldr (\_ n -> 1 + n) 0
+
+
+e.g Reverse
+reverse :: [a] -> [a]
+reverse [] = []
+reverse (x:xs) = reverse xs ++ [x]
+
+As foldr
+
+foldr (\x xs -> xs ++ [x]) [] [1,2,3]
+
+e.g Nice variation of the append function ++
+(++ ys) = foldr (:) ys
+
+foldr can enable advanced program optimisations if foldr is used in place of explicit recursion 
 
 ## Function Composition ( . operator )
-It returns the composition of 2 functions as a single function
+Returns the composition of 2 functions as a single function
 (.) :: (b -> c) -> (a -> b) -> a -> c
 f . g = \x -> f (g x)
 
+e.g 
+odd :: Int - > Bool
+odd = not . even
+
+Like any other function, the '.' function can be passed as arguments to other functions. e.g
+
+compose :: [a -> a] -> (a -> a)
+compose = foldr (.) id
+
+
+## Other Functions
+
+### all
+Checks if every element in a list satisfies a predicate.
+
+all :: (a -> Bool) -> [a] -> Bool
+all p xs = and [p x | x <- xs]
+
+### any
+Chekcs if any element in a list satisfies a predicate.
+
+any :: (a -> Bool) -> [a] -> Bool
+any p xs = or [p x | x <- xs]
+
+
+e.g 
+any isSpace "abc def"
+
+### takeWhile
+Selects elements from a list while predicate is true. The recusrion terminates once the predicate is false by returning an empty list.
+If the predicate is true.
+
+e.g
+takeWhile isAlpha "abc def"
+
+e.g takeWhile with a guard
+takeWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile _ [] = []
+takeWhile f (x:xs)
+	| f x = x : takeWhile f xs
+	| otherwise = []
+
+
+
+### dropWhile
+Remove elements while a predicate is true.
+
+
+
 
 TODO cons operator associativity?
+TODO fusion?
+TODO bannana split rule?
+TODO function composition associativity
+
+
+TODO implement map and filter using foldr
+TODO implment takewhile
+TODO implement dropWhile
+
+## id
+Identity function -> returns the value passed in.
 
 
 
+HOme Work
+evens :: [Integer] -> [Integer]
+evens xs = [x | x <- xs, even x] 
+
+sum . evens $ [827305 .. 927104] = 43772529500
+
+
+e.g Other examples, filter and mapping:
+filter even (map (+1) [1..5])
