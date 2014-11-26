@@ -114,6 +114,9 @@ type MyType = [char]		// define a type called MyType consisiting of a list of Ch
 type Person = (Name, Address)
 
 
+
+type Parser = String -> [(Tree,String)]
+
 ## Sequences 
 [1, 3..]	// infinite sequence using a step of 2
 
@@ -368,6 +371,8 @@ head (x:_) = x
 
 tail :: [a] -> a
 tail (_:xs) = xs
+
+- [x] : Match a singleton list
 
 
 (_:xs) : Pattern that discards the head element.
@@ -782,6 +787,69 @@ TODO implement dropWhile
 
 ## id
 Identity function -> returns the value passed in.
+
+# Parsing
+A parser analyses a piece of text to determine its syntactic structure. A software component that takes input data and builds
+a data structure or performs some sort of analysis.
+
+e.g
+type Parser = String -> Tree
+type Parser a = String -> [(a, String)]
+
+
+# Haskell and Maybe / List
+- It is common to use a use in place of a Maybe - return [] for none, and single list for the maybe
+
+# Type Synonyms
+Allow an alias to be assigned to a type, e.g
+
+type Phonebook = [(String,String)]
+
+The type can be used throughout code.
+
+Type synonmyns can be parameterized, e.g
+
+type AssocList k v = [(k,v)] 
+type Parser a = String -> [(a, String)]
+
+# Case
+case expression of pattern -> result
+	           pattern -> result
+
+Whereas pattern matching on function parameters can only be done when defining functions, case expressions can be used pretty much anywhere
+
+e.g Simple parser that returns the first character and the rest of a string.
+
+item :: Parser Char
+item = \inp -> case inp of
+		[] -> []
+		(x:xs) -> [(x, xs)]
+
+
+item :: Parser Char
+item = \inp -> case (someFunctionThatReturns) of
+		[] -> []
+		(x:xs) -> [(x, xs)]
+
+# Do Syntax
+do is use with mondaic types
+
+
+# Map
+A definition of map:
+
+   map         :: (a -> b) -> [a] -> [b]
+   map f []     = []
+   map f (x:xs) = f x : map f xs
+
+# Using Maybe
+e.g
+   safediv     :: Int -> Int -> Maybe Int
+   safediv n m =  if m == 0 then Nothing else Just (n `div` m)
+
+
+# Sequencing
+do allows sequential composition - imperitive style
 
 
 
