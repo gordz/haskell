@@ -379,6 +379,7 @@ tail (_:xs) = xs
 
 # Lambda Expressions
 - allow anonymous functions (nameless function). An expression that denotes a function.
+
 \x -> x + x
 (\x -> x * 2)
 
@@ -399,6 +400,12 @@ e.g (+) 1 2
 (1/) 	- reciprocation function
 (*2)	- doubling function
 (/2)	- halving function
+(x == )	- equality, is x equal to.., e.g 
+
+char x = f (x ==)
+
+
+
 
 - Sections allow you to partially apply an infix operator, and the resulting function can be passed around.
 
@@ -832,7 +839,7 @@ item = \inp -> case (someFunctionThatReturns) of
 		(x:xs) -> [(x, xs)]
 
 # Do Syntax
-do is use with mondaic types
+do notation is used with any mondaic types
 
 
 # Map
@@ -850,7 +857,58 @@ e.g
 
 # Sequencing
 do allows sequential composition - imperitive style
+Do only works with monads, and enables sequencing.
 
+# Interactive Programs
+Programs need a way to communicate with the outside world.
+Haskell programs are pure/mathematical functions - they have no side effects. The same arguments will always return the same result.
+There needs to be a balance between side effects and purity.
+
+- mastery of programming - That is exactly what shows mastery of programming
+that you can decide where to use side effects
+and where to avoid them. But if I hear you say
+we have to program without any side effects, you have not
+understood the essence of this course.
+
+## IO Monad
+Allows Haskell to communicate with the outside world. IO is not a mathematical function - it has side effects. The IO monad indicates a function
+has side effects. The IO monad distinguishes pure functions from impure functions that may have side effects.
+
+The IO monad allows a haskell program to communicate with the outside world.
+
+IO a  : the type of actions that return a value of type a
+
+
+
+IO Char - actions that return a char
+IO () - actions that return no result (IO of unit) - equivalent to void in imperitive language
+ A function with no return, only side effects.
+
+() - unit, a tuple with no components
+
+IO String : A possibly side-effecting computation that, if it terminates, produces a value of type String 
+
+e.g Read chars
+
+a :: IO (Char, Char)
+a = do x <- getChar
+	getChar
+	y <- getChar
+	return (x,y)
+
+## Basic IO Actions
+getChar  : Read a char from keyboard, echo to screen and return it.
+putChar : Write a char to standard output, returns void.
+return  : returns a value - no further side effects
+
+
+# Haskell and Lazyness
+TODO
+
+
+## Diff 2 strings in hangman
+diff :: String -> String -> String
+diff xs ys = [if x `elem` ys then x else '-' | x <- xs]
 
 
 HOme Work
