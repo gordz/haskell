@@ -13,7 +13,9 @@ The monad of parsers
 >
 > instance Monad Parser where
 >    return v                   =  P (\inp -> [(v,inp)])
->    p >>= f                    =  error "You must implement (>>=)"
+>    p >>= f                    =  P (\ inp -> case parse p inp of
+>					[(v, out)] -> parse (f v) out
+>					[] -> [])
 > 
 > instance MonadPlus Parser where
 >    mzero                      =  P (\inp -> [])
@@ -122,3 +124,41 @@ Ignoring spacing
 >
 > symbol                        :: String -> Parser String
 > symbol xs                     =  token (string xs)
+
+
+> p :: Parser (Char, Char)
+> p = do x <- item
+>        item 
+>        y <- item
+>        return (x, y)
+
+
+> expr' :: Parser Int
+> expr' = 
+>   do n <- natural
+>      ns <- many
+>              (do symbol "-"
+>                  natural)
+>      return (foldl (-) n ns)
+>     
+> expr'' :: Parser Int      
+> expr'' = do n <- natural
+>             symbol "-"
+>             n' <- natural
+>             return (n - n')
+>       
+
+ expr''' :: Parser Int  
+ expr''' = do n <- natural
+              ns <- many (do symbol "-"
+                             natural)
+
+> expr'''' :: Parser Int  
+> expr'''' = do n <- natural
+>               symbol "-"
+>               e <- expr''''
+>               return (e - n)
+  
+       
+
+

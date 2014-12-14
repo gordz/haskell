@@ -182,7 +182,7 @@ e.g
 
 zip [1,2] [a,b]  [(1,a), (2,b)]	// zips 2 lists together, pairing up elements with the same index
 
-splitAt 2 [1,2,3,4] = ([1,2], [3,4])	- Splits a list into two, with the first list of length n
+splitAt 2 [1,2,3,4] = ([1,2], [3,4])	- Splits a list into two, with the first list of length n. Returns a tuple with the split list.
 
 ++ : Append two lists - linear time
 == 	: Equality operatior works for lists.
@@ -841,6 +841,18 @@ item = \inp -> case (someFunctionThatReturns) of
 # Do Syntax
 do notation is used with any mondaic types
 
+- if statements can be used within do blocks
+
+e.g
+
+sat :: (Char -> Bool) -> Parser Char
+sat p : do x <- item
+           if p x then
+              return x
+           else
+               failure
+
+
 
 # Map
 A definition of map:
@@ -854,6 +866,11 @@ e.g
    safediv     :: Int -> Int -> Maybe Int
    safediv n m =  if m == 0 then Nothing else Just (n `div` m)
 
+# Monads
+Monads allow you to use the do notation.
+
+# Monads and Parsing
+Monads using with Parser -> enables chaining of parsers.
 
 # Sequencing
 do allows sequential composition - imperitive style
@@ -920,3 +937,30 @@ sum . evens $ [827305 .. 927104] = 43772529500
 
 e.g Other examples, filter and mapping:
 filter even (map (+1) [1..5])
+
+# List Monad
+e.g (poem >>= id)  concatenates a list.
+
+# Countdown Problem
+- given numbers and standard arthrimitic operator s (+, -, *, / ), constract an expression whose value is x
+- all numbers must be positibe naturals
+- each number can only be used once
+
+# Idiomatic Haskell
+- prefer lists [] over maybe types
+
+
+Choices - choose 0 or more elements from the input list, in any order
+
+
+
+
+
+# GENERAL
+- A mutual recursive function ( from week 7 lecture 2) - mutual recursive function. - mutually-recursive functions
+- Function application associates to the left.
+- Innermost reduction may require fewer steps than outermost reduction
+- Outermost reduction may terminate when innermost reduction does not.
+- Using lazy evaluation makes some programs more efficient than otherwise.
+
+

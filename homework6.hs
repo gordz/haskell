@@ -89,9 +89,18 @@ dec2int = foldl (\x y -> (x * 10) + y) 0
 compose :: [a -> a] -> (a -> a)
 compose = foldr (.) id
 
--- Curry
-curry :: ((a, b) -> c) -> a -> b -> c
-curry f 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
