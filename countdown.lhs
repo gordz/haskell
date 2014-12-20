@@ -67,7 +67,9 @@ Choose a correct implementation of the function isChoice :: Eq a => [a] -> [a] -
 -------------------------------------------------
 
 > isChoice :: Eq a => [a] -> [a] -> Bool 
-> isChoice = undefined
+> isChoice [] _ = True
+> isChoice (x:xs) [] = False
+> isChoice (x:xs) ys = elem x ys && isChoice xs (removeone x ys)
 
 Formalising the problem
 -----------------------
@@ -78,8 +80,14 @@ Formalising the problem
 Brute force solution
 --------------------
 
+Choose a correct implementation of the function split :: [a] -> [([a],[a])] seen in the lecture, that returns all possible ways of splitting a list into two non-empty lists that append to give the original list.
+-----------------------
+
 > split                         :: [a] -> [([a],[a])]
-> split                         =  undefined
+> split [] = []
+> split [_] = []
+> split (x:xs) = ([x], xs) : [(x : ls, rs) | (ls,rs) <- split xs]
+
 > 
 > exprs                         :: [Int] -> [Expr]
 > exprs []                      =  []

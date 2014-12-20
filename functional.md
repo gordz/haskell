@@ -943,11 +943,55 @@ e.g (poem >>= id)  concatenates a list.
 
 # Countdown Problem
 - given numbers and standard arthrimitic operator s (+, -, *, / ), constract an expression whose value is x
-- all numbers must be positibe naturals
+- all numbers must be positive naturals
 - each number can only be used once
 
+- write the simpliest program / brute force approach - then begin refactoring to improve and optimise
+- avoid premature optimisation
+
+- "Think like a fundamentalist but code like a Hacker" - This is what we will see here. We start with a very fundamentalist thing, it
+has to be correct and then we'll hack on the code to make it more efficient.
+
+e.g 
+data Op = Add | Sub | Mul | Div
+
+-- Takes 2 numbers and applies the operator.
+apply :: Op -> Int -> Int -> Int
+apply Add x y = x + y
+apply Sub x y = x - y
+apply Mul x y = x * y
+apply Div x y = x `div` y
+
+valid :: Op -> Int -> Int -> Bool
+valid Add _ _ = True
+valid Sub x y = x  > y
+valid Mul _ _ = True
+valid Div x y = x `mod` y == 0
+
+data Expr = Val Int | App Op Expr Expr
+
+-- Eval either succeeds and returns a singleton list, or fails and returns an empty list.
+eval :: Expr -> [Int]
+eval (Val n) = [n | n > 0]
+eval (App o l r) = [apply o x y | x <- eval l
+				, y <- eval r 
+                                , valid o x y]
+
+values :: Expr -> [Int]
+values (Val n) = [n]
+values (App _ l r) = values l ++ values r
+
+combine :: Expr -> Expr -> [Expr]
+combine l r = [App o l r | o <- [Add,Sub,Mul,Div]]
+
+
+
+-- Decide if an expression is a solution for a given list of source numbers and a target number.
+solution :: Expr -> [Int] -> Int -> Bool
+solution e ns n = elem (values e) (choices ns) && eval e == [n]
+
 # Idiomatic Haskell
-- prefer lists [] over maybe types
+- prefer lists [] over maybe types - use a singleton list or empty list
 
 
 Choices - choose 0 or more elements from the input list, in any order
@@ -962,5 +1006,7 @@ Choices - choose 0 or more elements from the input list, in any order
 - Innermost reduction may require fewer steps than outermost reduction
 - Outermost reduction may terminate when innermost reduction does not.
 - Using lazy evaluation makes some programs more efficient than otherwise.
+- Read Richard Birch papers
+- google the expression problem, the countdown problem
 
 
